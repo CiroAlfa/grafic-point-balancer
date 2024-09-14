@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from 'recharts';
 
@@ -15,20 +16,20 @@ const BreakEvenChartInteractive = () => {
   }, [costoFijo, costoVariable, precioVenta]);
 
   const calcularPuntoEquilibrio = () => {
-    const x = costoFijo / (precioVenta - costoVariable);
+    const x = Math.ceil(costoFijo / (precioVenta - costoVariable));
     const y = x * precioVenta;
     setPuntoEquilibrio({ x, y });
     generarDatos(x, y);
   };
 
   const generarDatos = (x, y) => {
-    const newMaxX = x * 2;
-    const newMaxY = y * 2;
+    const newMaxX = Math.ceil(x * 2);
+    const newMaxY = Math.ceil(y * 2);
     setMaxX(newMaxX);
     setMaxY(newMaxY);
 
     const newData = [];
-    const step = newMaxX / 20;
+    const step = Math.max(1, Math.floor(newMaxX / 20));
     for (let i = 0; i <= newMaxX; i += step) {
       newData.push({
         x: i,
@@ -45,15 +46,12 @@ const BreakEvenChartInteractive = () => {
   };
 
   const formatNumber = (number) => {
-    if (typeof number === 'number') {
-      if (number >= 1000000) {
-        return (number / 1000000).toFixed(2) + 'M';
-      } else if (number >= 1000) {
-        return (number / 1000).toFixed(2) + 'K';
-      }
-      return number.toFixed(2);
+    if (number >= 1000000) {
+      return (number / 1000000).toFixed(1) + 'M';
+    } else if (number >= 1000) {
+      return (number / 1000).toFixed(1) + 'K';
     }
-    return number; // en caso de que no sea un número
+    return number.toFixed(0);
   };
 
   return (
@@ -91,8 +89,8 @@ const BreakEvenChartInteractive = () => {
       </div>
 
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <p>Punto de Equilibrio: {puntoEquilibrio.x.toFixed(2)} unidades</p>
-        <p>Ingreso/Costo en Punto de Equilibrio: ${puntoEquilibrio.y.toFixed(2)}</p>
+        <p>Punto de Equilibrio: {formatNumber(puntoEquilibrio.x)} unidades</p>
+        <p>Ingreso/Costo en Punto de Equilibrio: ${formatNumber(puntoEquilibrio.y)}</p>
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
@@ -120,8 +118,8 @@ const BreakEvenChartInteractive = () => {
           <Legend wrapperStyle={{ color: 'white' }} />
           <Line type="monotone" dataKey="costoTotal" stroke="#ff7300" strokeWidth={3} name="Costo Total" />
           <Line type="monotone" dataKey="ingresoTotal" stroke="#00ff00" strokeWidth={3} name="Ingreso Total" />
-          <ReferenceLine x={puntoEquilibrio.x} stroke="red" strokeWidth={2} label={{ value: `PE: ${puntoEquilibrio.x.toFixed(2)}`, fill: 'white' }} />
-          <ReferenceLine y={puntoEquilibrio.y} stroke="red" strokeWidth={2} label={{ value: `$${puntoEquilibrio.y.toFixed(2)}`, fill: 'white' }} />
+          <ReferenceLine x={puntoEquilibrio.x} stroke="red" strokeWidth={2} label={{ value: "Punto de Equilibrio", fill: 'white' }} />
+          <ReferenceLine y={puntoEquilibrio.y} stroke="red" strokeWidth={2} label={{ value: `$${formatNumber(puntoEquilibrio.y)}`, fill: 'white' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

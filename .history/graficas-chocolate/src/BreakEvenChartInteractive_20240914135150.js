@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from 'recharts';
 
@@ -13,7 +14,7 @@ const BreakEvenChartInteractive = () => {
   useEffect(() => {
     calcularPuntoEquilibrio();
   }, [costoFijo, costoVariable, precioVenta]);
-
+  
   const calcularPuntoEquilibrio = () => {
     const x = costoFijo / (precioVenta - costoVariable);
     const y = x * precioVenta;
@@ -37,11 +38,6 @@ const BreakEvenChartInteractive = () => {
       });
     }
     setData(newData);
-  };
-
-  const handleInputChange = (setter) => (e) => {
-    const value = parseFloat(e.target.value) || 0;
-    setter(value);
   };
 
   const formatNumber = (number) => {
@@ -91,8 +87,8 @@ const BreakEvenChartInteractive = () => {
       </div>
 
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <p>Punto de Equilibrio: {puntoEquilibrio.x.toFixed(2)} unidades</p>
-        <p>Ingreso/Costo en Punto de Equilibrio: ${puntoEquilibrio.y.toFixed(2)}</p>
+        <p>Punto de Equilibrio: {formatNumber(puntoEquilibrio.x)} unidades</p>
+        <p>Ingreso/Costo en Punto de Equilibrio: ${formatNumber(puntoEquilibrio.y)}</p>
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
@@ -120,8 +116,8 @@ const BreakEvenChartInteractive = () => {
           <Legend wrapperStyle={{ color: 'white' }} />
           <Line type="monotone" dataKey="costoTotal" stroke="#ff7300" strokeWidth={3} name="Costo Total" />
           <Line type="monotone" dataKey="ingresoTotal" stroke="#00ff00" strokeWidth={3} name="Ingreso Total" />
-          <ReferenceLine x={puntoEquilibrio.x} stroke="red" strokeWidth={2} label={{ value: `PE: ${puntoEquilibrio.x.toFixed(2)}`, fill: 'white' }} />
-          <ReferenceLine y={puntoEquilibrio.y} stroke="red" strokeWidth={2} label={{ value: `$${puntoEquilibrio.y.toFixed(2)}`, fill: 'white' }} />
+          <ReferenceLine x={puntoEquilibrio.x} stroke="red" strokeWidth={2} label={{ value: "Punto de Equilibrio", fill: 'white' }} />
+          <ReferenceLine y={puntoEquilibrio.y} stroke="red" strokeWidth={2} label={{ value: `$${formatNumber(puntoEquilibrio.y)}`, fill: 'white' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
